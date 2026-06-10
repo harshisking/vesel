@@ -15,40 +15,82 @@ This project was created to explore how file formats work under the hood by impl
 * Cross-platform file handling using pathlib
 * Simple and extensible format design
 
-## Example
-
-Writing a vessel:
+## Quick Example
 
 ```python
-writer("message.vesel", "Hello World")
-```
+from vesel.io import VeselIO
+from vesel.models import Version, Header, VeselFile
 
-Reading a vessel:
+file = VeselFile(
+    header=Header(
+        version=Version(0, 1, 0)
+    ),
+    payload=b"Hello World"
+)
 
-```python
-data = reader("message.vesel")
-print(data)
-```
+VeselIO.write(
+    "hello.vesel",
+    file
+)
 
-Output:
+loaded = VeselIO.read(
+    "hello.vesel"
+)
 
-```python
-{
-    'VERSION': 1,
-    'DATA': 'Hello World'
-}
+print(
+    loaded.payload.decode("utf-8")
+)
 ```
 
 ## Project Structure
 
 ```text
 vesel/
-├── main.py
-├── data/
-│   └── the-first.vesel
 ├── docs/
 │   └── specifications.md
-└── README.md
+├── examples/
+│   └── basic_usage.py
+├── src/
+│   └── vesel/
+│       ├── __init__.py
+│       ├── cli.py
+│       ├── constants.py
+│       ├── exceptions.py
+│       ├── io.py
+│       ├── models.py
+│       └── utils.py
+├── tests/
+│   └── test_io.py
+├── LICENSE
+├── pyproject.toml
+├── README.md
+└── the-first.vesel
+```
+
+### Directory Overview
+
+| Path | Purpose |
+|--------|---------|
+| `docs/` | Technical documentation and format specifications |
+| `examples/` | Example programs demonstrating Vesel usage |
+| `src/vesel/` | Main package source code |
+| `tests/` | Automated test suite |
+| `LICENSE` | Project license |
+| `pyproject.toml` | Package configuration and build settings |
+| `README.md` | Project overview and usage guide |
+| `the-first.vesel` | First Vesel file created during development |
+
+### Core Modules
+
+| Module | Responsibility |
+|----------|---------------|
+| `models.py` | Data structures (`Version`, `Header`, `VeselFile`) |
+| `io.py` | Serialization, deserialization, file reading and writing |
+| `constants.py` | Format-wide constants such as magic bytes |
+| `exceptions.py` | Custom Vesel exceptions |
+| `utils.py` | Shared helper functions |
+| `cli.py` | Command-line interface |
+| `__init__.py` | Public package exports |
 ```
 
 ## Specification

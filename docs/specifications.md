@@ -1,14 +1,16 @@
 # VESEL Format Specification
 
-Version: 1.0
+Version: 0.1.0
 
 Status: Draft
 
 ## 1. Introduction
 
-VESEL is a lightweight binary file format designed to store UTF-8 encoded textual data.
+VESEL is a lightweight binary file format designed to store arbitrary binary data.
 
-The format is intentionally minimal and serves as a learning implementation of binary file format design.
+The format is intentionally minimal and serves as a learning implementation of binary file format design. VESEL makes no assumptions about the contents of the payload and may store text, images, serialized objects, or any other binary data.
+
+---
 
 ## 2. Terminology
 
@@ -16,61 +18,83 @@ The format is intentionally minimal and serves as a learning implementation of b
 * SHOULD: Recommended but not required.
 * MAY: Optional.
 
+---
+
 ## 3. File Structure
 
-A Version 1 VESEL file consists of three sections:
+A Version 0.1.0 VESEL file consists of three sections:
 
-| Offset | Length          | Description           |
-| ------ | --------------- | --------------------- |
-| 0      | 5 bytes         | Magic Number          |
-| 5      | 1 byte          | Format Version        |
-| 6      | Remaining Bytes | UTF-8 Encoded Payload |
+| Offset | Length          | Description   |
+| ------ | --------------- | ------------- |
+| 0      | 5 bytes         | Magic Number  |
+| 5      | 1 byte          | Major Version |
+| 6      | 1 byte          | Minor Version |
+| 7      | 1 byte          | Patch Version |
+| 8      | Remaining Bytes | Payload       |
+
+---
 
 ## 4. Magic Number
 
 The first five bytes of every VESEL file MUST contain:
 
 ```text
-VESEL
+HBVSL
 ```
 
 Hexadecimal representation:
 
 ```hex
-56 45 53 45 4C
+48 42 56 53 4C
 ```
 
 Readers MUST reject files whose magic number does not match.
 
-## 5. Version Field
+---
 
-The version field occupies one byte immediately following the magic number.
+## 5. Version Fields
 
-Current version:
+The version immediately follows the magic number and consists of three one-byte unsigned integers:
+
+| Byte | Description   |
+| ---- | ------------- |
+| 5    | Major Version |
+| 6    | Minor Version |
+| 7    | Patch Version |
+
+Current format version:
 
 ```text
-1
+0.1.0
 ```
 
-Hexadecimal representation:
+Encoded as:
 
 ```hex
-01
+00 01 00
 ```
 
 Readers SHOULD reject unsupported versions.
 
+---
+
 ## 6. Payload
 
-All bytes following the version field are interpreted as UTF-8 encoded text.
+All bytes following the version fields are interpreted as payload data.
 
-Example payload:
+The VESEL format does not define the meaning of the payload.
 
-```text
-THE FIRST VESSEL IS MADE!
-```
+Examples include:
 
-Readers MUST decode the payload using UTF-8.
+* UTF-8 text
+* Images
+* Serialized objects
+* Compressed data
+* Arbitrary binary data
+
+Readers SHOULD interpret the payload according to the application's requirements.
+
+---
 
 ## 7. Example File
 
@@ -83,26 +107,31 @@ Hello World
 Binary Layout:
 
 ```text
-VESEL
-01
+HBVSL
+00 01 00
 Hello World
 ```
 
 Hexadecimal Representation:
 
 ```hex
-56 45 53 45 4C
-01
+48 42 56 53 4C
+00 01 00
 48 65 6C 6C 6F 20 57 6F 72 6C 64
 ```
 
+---
+
 ## 8. Compliance Requirements
 
-A valid Version 1 VESEL file MUST:
+A valid VESEL Version 0.1.0 file MUST:
 
-1. Begin with the magic number `VESEL`.
-2. Contain a supported version byte.
-3. Contain a UTF-8 payload.
+1. Begin with the magic number `HBVSL`.
+2. Contain three version bytes.
+3. Contain a payload section.
+4. Use a supported format version.
+
+---
 
 ## 9. Future Compatibility
 
@@ -112,6 +141,7 @@ Future versions MAY introduce:
 * Payload length fields
 * Multiple data blocks
 * Compression
+* Checksums
 * Encryption
 * Archive/container functionality
 
