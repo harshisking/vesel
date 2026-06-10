@@ -1,0 +1,3 @@
+# constants
+
+MAGIC = b"HBVSL"
