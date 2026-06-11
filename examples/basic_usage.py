@@ -8,10 +8,10 @@ file = VeselFile(
     payload=b"The First Vesel!"
 )
 
-VeselIO.write("the-first.vesel",file)
+VeselIO.write("examples/the-first.vesel",file)
 print("Write Successful")
 
-loaded = VeselIO.read("the-first.vesel")
+loaded = VeselIO.read("examples/the-first.vesel")
 print("Read and Load Successful\n")
 
 print(loaded.payload.decode("utf-8"))
