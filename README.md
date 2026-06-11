@@ -18,12 +18,11 @@ This project was created to explore how file formats work under the hood by impl
 ## Quick Example
 
 ```python
-from vesel.io import VeselIO
-from vesel.models import Version, Header, VeselFile
+from vesel import VeselIO, Version, Header, VeselFile
 
 file = VeselFile(
     header=Header(
-        version=Version(0, 1, 0)
+        version=Version(0, 2, 0)
     ),
     payload=b"Hello World"
 )
