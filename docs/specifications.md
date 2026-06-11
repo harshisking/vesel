@@ -1,6 +1,6 @@
 # VESEL Format Specification
 
-Version: 0.2.0
+Version: 0.2.2
 
 Status: Draft
 
@@ -22,7 +22,7 @@ The format is intentionally minimal and serves as a learning implementation of b
 
 ## 3. File Structure
 
-A Version 0.2.0 VESEL file consists of three sections:
+A Version 0.2.2 VESEL file consists of three sections:
 
 | Offset | Length          | Description   |
 | ------ | --------------- | ------------- |
@@ -66,13 +66,13 @@ The version immediately follows the magic number and consists of three one-byte 
 Current format version:
 
 ```text
-0.2.0
+0.2.2
 ```
 
 Encoded as:
 
 ```hex
-00 02 00
+00 02 02
 ```
 
 Readers SHOULD reject unsupported versions.
@@ -118,7 +118,7 @@ Binary Layout:
 
 ```text
 HBVSL
-00 02 00
+00 02 02
 Hello World
 ```
 
@@ -126,7 +126,7 @@ Hexadecimal Representation:
 
 ```hex
 48 42 56 53 4C
-00 02 00
+00 02 02
 48 65 6C 6C 6F 20 57 6F 72 6C 64
 ```
 
