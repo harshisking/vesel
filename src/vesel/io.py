@@ -67,7 +67,7 @@ class VeselIO:
         major,minor,patch = int.from_bytes(data[5:6]),int.from_bytes(data[6:7]),int.from_bytes(data[7:8])
         version = Version(major,minor,patch)
         length = int.from_bytes(data[8:12],'big')
-        payload = data[12:length]
+        payload = data[12:(12+length)]
 
         return VeselFile(
             Header(version),
