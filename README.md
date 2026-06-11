@@ -16,6 +16,9 @@ This project was created to explore how file formats work under the hood by impl
 * Simple and extensible format design
 
 ## Quick Example
+```bash
+pip install vesel
+```
 
 ```python
 from vesel import VeselIO, Version, Header, VeselFile
