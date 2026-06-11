@@ -1,6 +1,6 @@
 # VESEL Format Specification
 
-Version: 0.1.0
+Version: 0.2.0
 
 Status: Draft
 
@@ -22,7 +22,7 @@ The format is intentionally minimal and serves as a learning implementation of b
 
 ## 3. File Structure
 
-A Version 0.1.0 VESEL file consists of three sections:
+A Version 0.2.0 VESEL file consists of three sections:
 
 | Offset | Length          | Description   |
 | ------ | --------------- | ------------- |
@@ -30,7 +30,8 @@ A Version 0.1.0 VESEL file consists of three sections:
 | 5      | 1 byte          | Major Version |
 | 6      | 1 byte          | Minor Version |
 | 7      | 1 byte          | Patch Version |
-| 8      | Remaining Bytes | Payload       |
+| 8      | 4 bytes         | Payload length|
+| 12     | N Bytes         | Payload       |
 
 ---
 
@@ -65,20 +66,29 @@ The version immediately follows the magic number and consists of three one-byte 
 Current format version:
 
 ```text
-0.1.0
+0.2.0
 ```
 
 Encoded as:
 
 ```hex
-00 01 00
+00 02 00
 ```
 
 Readers SHOULD reject unsupported versions.
 
 ---
+## 6. Payload Length
 
-## 6. Payload
+The Payload Length field follows the Version field. It represents the length of the payload, in bytes, encoded as a four-byte unsigned integer.
+
+The value specifies the exact number of bytes that make up the payload section of the file.
+
+Unless otherwise specified, the integer MUST be stored in big-endian byte order.
+
+---
+
+## 7. Payload
 
 All bytes following the version fields are interpreted as payload data.
 
@@ -96,7 +106,7 @@ Readers SHOULD interpret the payload according to the application's requirements
 
 ---
 
-## 7. Example File
+## 8. Example File
 
 Payload:
 
@@ -108,7 +118,7 @@ Binary Layout:
 
 ```text
 HBVSL
-00 01 00
+00 02 00
 Hello World
 ```
 
@@ -116,13 +126,13 @@ Hexadecimal Representation:
 
 ```hex
 48 42 56 53 4C
-00 01 00
+00 02 00
 48 65 6C 6C 6F 20 57 6F 72 6C 64
 ```
 
 ---
 
-## 8. Compliance Requirements
+## 9. Compliance Requirements
 
 A valid VESEL Version 0.1.0 file MUST:
 
@@ -133,7 +143,7 @@ A valid VESEL Version 0.1.0 file MUST:
 
 ---
 
-## 9. Future Compatibility
+## 10. Future Compatibility
 
 Future versions MAY introduce:
 

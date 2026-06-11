@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from .constants import MAGIC
 
 @dataclass
 class Version:
@@ -11,7 +12,9 @@ class Version:
     
 @dataclass
 class Header:
+    magic=MAGIC
     version: Version
+    payload_length:int = 0
 
 @dataclass
 class VeselFile:

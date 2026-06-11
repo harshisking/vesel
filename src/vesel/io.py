@@ -50,7 +50,10 @@ class VeselIO:
                     file.header.version.patch
                 ])
         
-        return MAGIC+version+file.payload
+        file.header.payload_length = len(file.payload)
+        length = file.header.payload_length.to_bytes(4,"big")
+        
+        return (file.header.magic)+version+length+file.payload
     
 
     @staticmethod
@@ -63,8 +66,8 @@ class VeselIO:
         
         major,minor,patch = int.from_bytes(data[5:6]),int.from_bytes(data[6:7]),int.from_bytes(data[7:8])
         version = Version(major,minor,patch)
-
-        payload = data[8:]
+        length = int.from_bytes(data[8:12],'big')
+        payload = data[12:length]
 
         return VeselFile(
             Header(version),

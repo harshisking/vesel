@@ -3,7 +3,7 @@ from vesel.models import Header,Version,VeselFile
 
 file = VeselFile(
     header=Header(
-        version=Version(0,1,0)
+        version=Version(0,2,0)
         ),
     payload=b"The First Vesel!"
 )
