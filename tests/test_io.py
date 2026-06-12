@@ -22,7 +22,6 @@ def test_write_read_roundtrip(tmp_path):
     assert loaded.header.version == file.header.version
     assert loaded.payload == file.payload
 
-import pytest
 
 
 def test_invalid_magic(tmp_path):
