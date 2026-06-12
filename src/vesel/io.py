@@ -70,7 +70,7 @@ class VeselIO:
         payload = data[12:(12+length)]
 
         return VeselFile(
-            Header(version=version, payload_length=length),
+            Header(payload_length=length),
             payload
         )
         

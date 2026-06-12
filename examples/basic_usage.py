@@ -1,10 +1,8 @@
 from vesel.io import VeselIO
-from vesel.models import Header,Version,VeselFile
+from vesel.models import Header,VeselFile
 
 file = VeselFile(
-    header=Header(
-        version=Version(0,2,2)
-        ),
+    header=Header(),
     payload=b"The First Vesel!"
 )
 
