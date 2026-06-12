@@ -4,7 +4,7 @@ from .exceptions import *
 
 def write(path,payload:bytes):
     file = VeselFile(
-        Header(Version(0,2,2)),
+        Header(),
         payload
     )
 

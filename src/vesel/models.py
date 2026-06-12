@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from .constants import MAGIC
+from .constants import MAGIC,VERSION
 
 @dataclass
 class Version:
@@ -13,7 +13,7 @@ class Version:
 @dataclass
 class Header:
     magic=MAGIC
-    version: Version
+    version= VERSION
     payload_length:int = 0
 
 @dataclass
