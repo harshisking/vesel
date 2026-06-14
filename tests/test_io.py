@@ -7,9 +7,7 @@ from vesel.models import Version, Header, VeselFile
 
 def test_write_read_roundtrip(tmp_path):
     file = VeselFile(
-        header=Header(
-            version=Version(0, 1, 0)
-        ),
+        header=Header(),
         payload=b"Hello World"
     )
 
@@ -42,9 +40,7 @@ def test_missing_file():
 
 def test_empty_payload(tmp_path):
     file = VeselFile(
-        header=Header(
-            version=Version(0, 1, 0)
-        ),
+        header=Header(),
         payload=b""
     )
 
@@ -67,9 +63,7 @@ def test_binary_payload(tmp_path):
     ])
 
     file = VeselFile(
-        header=Header(
-            version=Version(0, 1, 0)
-        ),
+        header=Header(),
         payload=payload
     )
 
