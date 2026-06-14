@@ -50,10 +50,14 @@ class VeselIO:
                     file.header.version.patch
                 ])
         
+        compression = file.header.compression.encode("utf-8")
+        file.header.compression_len = len(compression)
+        compression_len = file.header.compression_len.to_bytes(1,"big")
+
         file.header.payload_length = len(file.payload)
         length = file.header.payload_length.to_bytes(4,"big")
-        
-        return (file.header.magic)+version+length+file.payload
+
+        return (file.header.magic)+version+compression_len+compression+length+file.payload
     
 
     @staticmethod
@@ -66,11 +70,16 @@ class VeselIO:
         
         major,minor,patch = int.from_bytes(data[5:6]),int.from_bytes(data[6:7]),int.from_bytes(data[7:8])
         version = Version(major,minor,patch)
-        length = int.from_bytes(data[8:12],'big')
-        payload = data[12:(12+length)]
+        
+        compression_length = int.from_bytes(data[8:9])
+        compression = data[9:(9+compression_length)].decode("utf-8")
+
+        length = int.from_bytes(data[(9+compression_length):(13+compression_length)],'big')
+        
+        payload = data[(13+compression_length):(13+compression_length+length)]
 
         return VeselFile(
-            Header(payload_length=length),
+            Header(compression_len=compression_length,compression=compression,payload_length=length),
             payload
         )
         

@@ -13,7 +13,9 @@ class Version:
 @dataclass
 class Header:
     magic=MAGIC
-    version= VERSION
+    version= Version(VERSION[0],VERSION[1],VERSION[2])
+    compression_len:int = 0
+    compression:str="none"
     payload_length:int = 0
 
 @dataclass
