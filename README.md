@@ -44,30 +44,11 @@ vesel.write(
     compression_name="gzip"
 )
 ```
-## Custom Compressors
-VESEL includes a pluggable compression system that allows developers to create and register their own compression algorithms.
 
-A custom compressor must inherit from `Compressor` and implement both `compress()` and `decompress()` methods.
-```python
-from vesel import Compressor, register_compressor
-class ReverseCompressor(Compressor):
-    name = "reverse"
-
-    def compress(self, data: bytes) -> bytes:
-        return data[::-1]
-
-    def decompress(self, data: bytes) -> bytes: 
-        return data[::-1] 
-        
-register_compressor(ReverseCompressor())
+For the complete compression specification, see:
+```text
+docs/compression.md
 ```
-Once registered, a custom compressor can be used like any built-in compressor by specifying its name when writing a file.
-
-Compressor names are stored in the VESEL file header, allowing files to describe which compression algorithm was used when the payload was written.
-
-Built-in compressors currently include:
-- none
-- gzip
 
 ## File Format Overview
 
@@ -151,4 +132,4 @@ MIT License
 
 ---
 
-"The first vessel is made."
+"The first vessel has been made."
