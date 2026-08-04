@@ -1,99 +1,123 @@
 # VESEL
+> [!WARNING]
+> VESEL is currently in active development and has not yet reached version 1.0.0. The file format and public APIs may change between releases.
+A binary file format and Python library for storing arbitrary byte payloads in a custom binary container.
 
-A tiny binary file format written in Python.
-
-VESEL files store UTF-8 text data inside a custom binary container with magic number validation and versioning support.
+VESEL provides magic number validation, versioning support, and pluggable compression while remaining lightweight and easy to understand.
 
 This project was created to explore how file formats work under the hood by implementing one from scratch.
 
 ## Features
 
-* Custom binary file format
+* Custom binary container format
 * Magic number validation
-* Version checking
-* UTF-8 text storage
-* Cross-platform file handling using pathlib
-* Simple and extensible format design
+* Versioned files
+* Arbitrary byte payloads
+* Compression support
+* Plugin architecture
+* Cross-platform
+* Tested
 
-## Quick Example
+## Installation
+
 ```bash
 pip install vesel
 ```
+## Quick Example
 
 ```python
-from vesel import VeselIO, Version, Header, VeselFile
+import vesel
 
-file = VeselFile(
-    header=Header(
-        version=Version(0, 2, 2)
-    ),
-    payload=b"Hello World"
-)
+vesel.write(path="example.vesel",payload=b"Lorem Ipsum",compression_name="none")
 
-VeselIO.write(
-    "hello.vesel",
-    file
-)
+loaded = vesel.read("example.vesel")
+print(loaded.payload.decode("utf-8"))
+```
+## Compression
 
-loaded = VeselIO.read(
-    "hello.vesel"
-)
+VESEL includes built-in support for gzip compression.
 
-print(
-    loaded.payload.decode("utf-8")
+```python
+vesel.write(
+    path="example.vesel",
+    payload=b"Lorem Ipsum",
+    compression_name="gzip"
 )
 ```
+## Custom Compressors
+VESEL includes a pluggable compression system that allows developers to create and register their own compression algorithms.
 
-## Project Structure
+A custom compressor must inherit from `Compressor` and implement both `compress()` and `decompress()` methods.
+```python
+from vesel import Compressor, register_compressor
+class ReverseCompressor(Compressor):
+    name = "reverse"
+
+    def compress(self, data: bytes) -> bytes:
+        return data[::-1]
+
+    def decompress(self, data: bytes) -> bytes: 
+        return data[::-1] 
+        
+register_compressor(ReverseCompressor())
+```
+Once registered, a custom compressor can be used like any built-in compressor by specifying its name when writing a file.
+
+Compressor names are stored in the VESEL file header, allowing files to describe which compression algorithm was used when the payload was written.
+
+Built-in compressors currently include:
+- none
+- gzip
+
+## File Format Overview
+
+A VESEL file consists of four main components:
+
+1. **Magic Number** – Identifies the file as a valid VESEL file.
+2. **Version Information** – Stores the format version used to create the file.
+3. **Compression Metadata** – Stores the name of the compression algorithm used for the payload.
+4. **Payload** – The raw binary data contained within the file.
+
+VESEL stores payloads as arbitrary bytes and does not impose any restrictions on the content. Applications are responsible for interpreting the payload data.
+
+A simplified layout is shown below:
 
 ```text
-vesel/
-├── docs/
-│   └── specifications.md
-├── examples/
-│   └── basic_usage.py
-├── src/
-│   └── vesel/
-│       ├── __init__.py
-│       ├── cli.py
-│       ├── constants.py
-│       ├── exceptions.py
-│       ├── io.py
-│       ├── models.py
-│       └── utils.py
-├── tests/
-│   └── test_io.py
-├── LICENSE
-├── pyproject.toml
-├── README.md
-└── the-first.vesel
++--------------------+
+| Magic Number       |
++--------------------+
+| Format Version     |
++--------------------+
+| Compression Info   |
++--------------------+
+| Payload Length     |
++--------------------+
+| Payload            |
++--------------------+
 ```
 
-### Directory Overview
+For the complete binary specification, see:
 
-| Path | Purpose |
-|--------|---------|
-| `docs/` | Technical documentation and format specifications |
-| `examples/` | Example programs demonstrating Vesel usage |
-| `src/vesel/` | Main package source code |
-| `tests/` | Automated test suite |
-| `LICENSE` | Project license |
-| `pyproject.toml` | Package configuration and build settings |
-| `README.md` | Project overview and usage guide |
-| `the-first.vesel` | First Vesel file created during development |
-
-### Core Modules
-
-| Module | Responsibility |
-|----------|---------------|
-| `models.py` | Data structures (`Version`, `Header`, `VeselFile`) |
-| `io.py` | Serialization, deserialization, file reading and writing |
-| `constants.py` | Format-wide constants such as magic bytes |
-| `exceptions.py` | Custom Vesel exceptions |
-| `utils.py` | Shared helper functions |
-| `cli.py` | Command-line interface |
-| `__init__.py` | Public package exports |
+```text
+docs/specifications.md
 ```
+
+## Project Goals
+
+VESEL was created as a learning project to explore how binary file formats are designed and implemented.
+
+The project aims to provide a simple and readable codebase that demonstrates concepts such as:
+
+* Binary serialization and deserialization
+* File format design
+* Versioning and compatibility
+* Data validation using magic numbers
+* Extensible architectures through plugins
+* Automated testing and maintainability
+
+VESEL is intentionally lightweight and focuses on clarity and experimentation rather than competing with established formats such as ZIP, TAR, or database storage systems.
+
+The long-term goal is to evolve VESEL into a stable, well-documented format while preserving its educational value.
 
 ## Specification
 
@@ -103,22 +127,19 @@ The complete VESEL format specification can be found in:
 docs/specifications.md
 ```
 
-## Why?
+## Stability
 
-Most developers interact with file formats every day:
+VESEL is currently in active development.
 
-* ZIP
-* PNG
-* PDF
-* MP3
+The project has not yet reached version 1.0.0, which means the file format, APIs, and internal implementation may change between releases.
 
-VESEL exists as a learning project to understand how binary formats are structured, parsed, and versioned.
+Compatibility guarantees will be introduced once the format reaches a stable 1.x release.
 
-## Future Ideas
+
+## Roadmap
 
 * Metadata support
 * Multiple data sections
-* Compression
 * Encryption
 * Archive/container support
 * CLI tooling

@@ -1,7 +1,6 @@
 import gzip
 
 from .compressor import Compressor
-from .registry import registry
 
 class NoneCompressor(Compressor):
     name = "none"
