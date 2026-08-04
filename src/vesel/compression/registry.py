@@ -4,7 +4,7 @@ from .exceptions import *
 class CompressorRegistry():
 
     def __init__(self) -> None:
-        self._compressors = {}
+        self._compressors: dict[str, Compressor] = {}
 
 
     def register(self,compressor:Compressor):

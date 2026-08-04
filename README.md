@@ -34,7 +34,6 @@ loaded = vesel.read("example.vesel")
 print(loaded.payload.decode("utf-8"))
 ```
 ## Compression
-## Compression
 
 VESEL includes built-in support for gzip compression.
 
