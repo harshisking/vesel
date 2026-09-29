@@ -9,7 +9,7 @@ def test_write_read_round_trip(tmp_path):
     loaded = vesel.read(path)
     assert loaded.header.payload_length == len(payload)
     assert loaded.payload == payload
-    assert loaded.header.version == vesel.Version(0,2,2)
+    assert loaded.header.version == vesel.Version(0,3,0)
 
 def test_compression_write_read_round_trip(tmp_path):
     path = tmp_path/"test.vesel"
@@ -21,7 +21,7 @@ def test_compression_write_read_round_trip(tmp_path):
     assert loaded.header.compression == "gzip"
     assert loaded.payload == payload
     assert loaded.header.payload_length == len(payload)
-    assert loaded.header.version == vesel.Version(0,2,2)
+    assert loaded.header.version == vesel.Version(0,3,0)
 
 def test_invalid_magic(tmp_path):
     path = tmp_path / "bad.vesel"
