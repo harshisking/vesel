@@ -37,3 +37,12 @@ def test_gzip_roundtrip():
     decompressed = compressor.decompress(data=compressed)
     
     assert original == decompressed
+
+def test_reverse_roundtrip():
+    compressor = get_compressor('reverse')
+    original = b"Hello World!"
+
+    compressed = compressor.compress(data=original)
+    decompressed = compressor.decompress(data=compressed)
+    
+    assert original == decompressed

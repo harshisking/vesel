@@ -107,6 +107,22 @@ compressed = compressor.compress(b"Hello")
 
 original = compressor.decompress(compressed)
 ```
+---
+## reverse
+
+Reverses the order of data(bytes).
+
+Example:
+
+```python
+from vesel.compression import get_compressor
+
+compressor = get_compressor("reverse")
+
+compressed = compressor.compress(b'Hello')
+
+original = compressor.decompress(compressed)
+```
 
 ---
 

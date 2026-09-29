@@ -15,14 +15,25 @@ class NoneCompressor(Compressor):
 class GzipCompressor(Compressor):
     name="gzip"
 
-    def compress(self,data:bytes)->bytes:
+    def compress(self,data:bytes) -> bytes:
         return gzip.compress(data)
     
-    def decompress(self,data:bytes)->bytes:
+    def decompress(self,data:bytes) -> bytes:
         return gzip.decompress(data)
 
 
+class ReverseCompressor(Compressor):
+    name = "reverse"
+
+    def compress(self,data:bytes) -> bytes:
+        return data[::-1]
+
+    def decompress(self, data: bytes) -> bytes:
+        return data[::-1]
+
+    
 BUILTINS = [
     NoneCompressor,
-    GzipCompressor
+    GzipCompressor,
+    ReverseCompressor
     ]
