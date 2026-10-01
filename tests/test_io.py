@@ -2,13 +2,14 @@ import pytest
 
 from vesel.exceptions import InvalidMagicError, InvalidPathError
 from vesel.io import VeselIO
-from vesel.models import Version, Header, VeselFile
+from vesel.models import Version, Header, Footer, VeselFile
 
 
 def test_write_read_roundtrip(tmp_path):
     file = VeselFile(
         header=Header(),
-        payload=b"Hello World"
+        payload=b"Hello World",
+        footer=Footer()
     )
 
     path = tmp_path / "test.vesel"
@@ -41,7 +42,8 @@ def test_missing_file():
 def test_empty_payload(tmp_path):
     file = VeselFile(
         header=Header(),
-        payload=b""
+        payload=b"",
+        footer=Footer()
     )
 
     path = tmp_path / "empty.vesel"
@@ -64,7 +66,8 @@ def test_binary_payload(tmp_path):
 
     file = VeselFile(
         header=Header(),
-        payload=payload
+        payload=payload,
+        footer=Footer()
     )
 
     path = tmp_path / "binary.vesel"

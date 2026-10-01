@@ -37,7 +37,8 @@ A Version **0.3.0** VESEL file consists of the following sections:
 | 8 | 1 byte | Compression Name Length |
 | 9 | N bytes | Compression Name (UTF-8) |
 | 9 + N | 4 bytes | Payload Length |
-| 13 + N | Payload Length bytes | Payload |
+| 13 + N | P bytes | Payload |
+| 13 + N + P | 32 bytes | sha256 Checksum|
 
 The header is therefore variable in size depending on the length of the compression name.
 
@@ -142,8 +143,20 @@ Examples include:
 Applications are responsible for interpreting the payload after decompression.
 
 ---
+# 10. Checksum
 
-# 10. Example File
+The Checksum field contains SHA-256 hash of the binary payload data.
+
+The checksum is stored as the raw 32-byte SHA-256 digest.
+
+Upon reading the file, the reader MUST calculate  the SHA-256 digest of the payload data and compare it with the value stored in the Checksum field.
+
+Readers MUST reject files if the calculated checksum does not match the stored checksum.
+
+
+---
+
+# 11. Example File
 
 Payload:
 
@@ -177,6 +190,9 @@ Payload Length
 
 Payload
 Hello World
+
+Checksum
+b'\xa5\x91\xa6\xd4\x0b\xf4 @J\x01\x173\xcf\xb7\xb1\x90\xd6,e\xbf\x0b\xcd\xa3+W\xb2w\xd9\xad\x9f\x14n'
 ```
 
 Hexadecimal Representation:
@@ -188,11 +204,12 @@ Hexadecimal Representation:
 6E 6F 6E 65
 00 00 00 0B
 48 65 6C 6C 6F 20 57 6F 72 6C 64
+a5 91 a6 d4 0b f4 20 40 4a 01 17 33 cf b7 b1 90 d6 2c 65 bf 0b cd a3 2b 57 b2 77 d9 ad 9f 14 6e
 ```
 
 ---
 
-# 11. Compliance Requirements
+# 12. Compliance Requirements
 
 A valid VESEL Version **0.3.0** file MUST:
 
@@ -202,19 +219,19 @@ A valid VESEL Version **0.3.0** file MUST:
 4. Contain a UTF-8 encoded Compression Name.
 5. Contain a Payload Length field.
 6. Contain exactly the specified number of payload bytes.
-7. Use a supported format version.
+7. Contain a 32 bytes SHA-256 digest Checksum field. 
+8. Use a supported format version.
 
 ---
 
-# 12. Future Compatibility
+# 13. Future Compatibility
 
 Future versions MAY introduce:
 
 - Additional metadata fields
-- Checksums
 - Encryption
 - Archive/container functionality
-- Extended header fields
+- Extended header and footer fields
 
 Applications SHOULD reject unsupported major versions unless compatibility is explicitly provided.
 

@@ -1,5 +1,5 @@
 from .io import VeselIO
-from .models import VeselFile,Header,Version
+from .models import VeselFile,Header,Footer,Version
 from .exceptions import *
 from .compression import *
 
@@ -10,7 +10,8 @@ def write(path,payload:bytes,comrpession_name:str="none"):
 
     file = VeselFile(
         Header(compression=comrpession_name),
-        payload
+        payload,
+        Footer()
     )
 
     VeselIO.write(path,file)
@@ -33,12 +34,15 @@ def readjson(path) -> dict:
     loaded.header.payload_length = len(loaded.payload)
 
     return {"Header":{
-        "Magic":loaded.header.magic,
-        'Version':loaded.header.version,
-        "Compression_len":loaded.header.compression_len,
-        "Compression":loaded.header.compression,
-        "Payload_length":loaded.header.payload_length},
-        "Payload":loaded.payload
+            "Magic":loaded.header.magic,
+            "Version":loaded.header.version,
+            "Compression_len":loaded.header.compression_len,
+            "Compression":loaded.header.compression,
+            "Payload_length":loaded.header.payload_length},
+        "Payload":loaded.payload,
+        "Footer":{
+            "Checksum":loaded.footer.checksum
+        }
         }
 
 __all__ = [

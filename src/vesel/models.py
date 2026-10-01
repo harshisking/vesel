@@ -19,6 +19,12 @@ class Header:
     payload_length:int = 0
 
 @dataclass
+class Footer:
+    checksum:bytes = b""
+
+
+@dataclass
 class VeselFile:
     header: Header
     payload: bytes
+    footer: Footer

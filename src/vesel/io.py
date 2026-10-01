@@ -4,13 +4,16 @@ from pathlib import Path
 from .models import (
     Version,
     Header,
+    Footer,
     VeselFile
 )
 from .constants import MAGIC
 from .exceptions import (
     InvalidPathError,
-    InvalidMagicError
+    InvalidMagicError,
+    CorruptedFileError
 )
+from .integrity import Hash
 
 class VeselIO:
     
@@ -57,7 +60,9 @@ class VeselIO:
         file.header.payload_length = len(file.payload)
         length = file.header.payload_length.to_bytes(4,"big")
 
-        return (file.header.magic)+version+compression_len+compression+length+file.payload
+        file.footer.checksum = Hash(file.payload)
+
+        return (file.header.magic)+version+compression_len+compression+length+(file.payload)+(file.footer.checksum)
     
 
     @staticmethod
@@ -78,8 +83,16 @@ class VeselIO:
         
         payload = data[(13+compression_length):(13+compression_length+length)]
 
+        checksum = data[(13+compression_length+length):]
+
+        if checksum != Hash(payload):
+            raise CorruptedFileError(
+                "File Checksum Mismatch: File may be corrupted"
+            )
+
         return VeselFile(
             Header(compression_len=compression_length,compression=compression,payload_length=length),
-            payload
+            payload,
+            Footer(checksum)
         )
         
